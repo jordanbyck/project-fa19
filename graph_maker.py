@@ -5,6 +5,7 @@ import random
 import sys
 import input_validator
 # import solver
+import input_validator
 
 def make_graph(locations, homes):
     np.set_printoptions(threshold=sys.maxsize)
@@ -81,13 +82,15 @@ def print_input(locations, homes, adj_list):
     # write the homes
     file.write(separator.join(str(home) for home in homes) + newline)
 
+    # write starting location
+    file.write(str(np.random.choice(locations)) + newline)
+
     # write the adj list
     for row in adj_list:
         file.write(separator.join(row) + newline)
     file.close()
 
-    input_validator.validate_input(str(len(locations)) + ".in")
-
 if __name__ == "__main__":
     make_graph(locations=50, homes=25)
+    input_validator.validate_input(input_file="50.in")
     #solver.solve_from_file()

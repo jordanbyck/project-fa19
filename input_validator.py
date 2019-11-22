@@ -32,6 +32,7 @@ def tests(input_file, params=[]):
     message = ''
     error = False
 
+    print(num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix)
     file_basename = os.path.basename(input_file)
 
     # check name constraints
