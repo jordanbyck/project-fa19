@@ -68,9 +68,12 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     while len(openSet) > 0:
 
         # current is the node with the lowest heuristic value
-        current = float("inf")
-        for heuristic in heuristics:
-            current = min(current, heuristic)
+        currentLowest = float("inf")
+        current = None
+        for key in heuristics.keys():
+            if currentLowest > heuristics[key]:
+                currentLowest = min(currentLowest, heuristics[key])
+                current = key
 
         # if we're at the goal, do some stuff
         if numTAs <= 0:
