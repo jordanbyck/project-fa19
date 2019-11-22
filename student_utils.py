@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+import scipy as sp
 
 
 def decimal_digits_check(number):
@@ -42,19 +43,41 @@ def adjacency_matrix_to_graph(adjacency_matrix):
 
 
 def graph_to_adjacency_matrix(G):
-    adjacency_matrix = [G.nodes.length()][G.nodes.length()]
+    holdmatrix = ["x" for _ in range(G.number_of_nodes())]
+    adjacency_matrix = [holdmatrix for _ in range(G.number_of_nodes())]
     rownum = 0
-    colnum = 0
+    print(adjacency_matrix)
     for _ in G.nodes:
-        rownum = rownum + 1
+        print("")
+        print(_)
         colnum = 0
         for x in G.nodes:
-            colnum = colnum + 1
+            print(x)
             if G.has_edge(_, x):
-                adjacency_matrix[rownum][colnum] = 1
-            else:
-                adjacency_matrix[rownum][colnum] = x
+                print("hello")
+                adjacency_matrix[x][_] = 1
+            colnum = colnum + 1
+        rownum = rownum + 1
     return adjacency_matrix
+
+def fiftygraph(a):
+    G = nx.Graph()
+    G.add_nodes_from(range(a, 50 + a))
+    for _ in range(6):
+        G.add_edge((_ * 7) + 1 + a, (_ * 7) + 2 + a)
+        G.add_edge((_ * 7) + 2 + a, (_ * 7) + 3 + a)
+        G.add_edge((_ * 7) + 3 + a, (_ * 7) + 4 + a)
+        G.add_edge((_ * 7) + 4 + a, (_ * 7) + 5 + a)
+        G.add_edge((_ * 7) + 5 + a, (_ * 7) + 6 + a)
+        G.add_edge((_ * 7) + 6 + a, (_ * 7) + 7 + a)
+    G.add_edge(a, 1 + a)
+    G.add_edge(a, 8 + a)
+    G.add_edge(a, 15 + a)
+    G.add_edge(a, 22 + a)
+    G.add_edge(a, 29 + a)
+    G.add_edge(a, 36 + a)
+    G.add_edge(a, 43 + a)
+    return G
 
 def is_metric(G):
     shortest = dict(nx.floyd_warshall(G))
