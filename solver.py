@@ -19,12 +19,6 @@ class Node:
         self.position = position
         self.parent = parent
 
-    def isGoal(self):
-        return
-
-    def findNeighbors(self):
-        return
-
 
 
 def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
@@ -47,6 +41,9 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     print("params", params)
 
     # lets try some Astar wooooooo
+
+    # the number of TAs. Used for the goal test
+    numTAs = len(list_of_homes)
 
     # initially only add the start to the set of discovered nodes
     openSet = {starting_car_location}
@@ -77,7 +74,8 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
             current = min(current, heuristic)
 
         # if we're at the goal, do some stuff
-        if isGoal():
+        if numTAs <= 0:
+            # reconstruct the path
             return
 
         openSet.remove(current)

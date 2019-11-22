@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import sys
-import solver
+# import solver
 
-def func():
+def make_graph():
     np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -33,8 +33,6 @@ def func():
         f[i[0]][i[1]]['weight'] = np.random.randint(100,199)
 
 
-
-
     labels = nx.get_edge_attributes(f, 'weight')
     nx.draw(f, with_labels=True, font_weight='bold')
     nx.draw_networkx_edge_labels(f, pos=nx.spring_layout(f), edge_labels=labels)
@@ -60,7 +58,14 @@ def func():
     #print('\n'.join([' '.join(['{:1}'.format(item) for item in row])
     #for row in adj_list]))
 
+def print_input_file(numLocations, numHomes, locationNames, homeNames, adjList):
+    file = open("50.in", "w+")
+    file.write(numLocations)
+    file.write(numHomes)
+    file.write(locationNames)
+    file.write(homeNames)
+
 
 if __name__ == "__main__":
-
-    solver.solve_from_file()
+    make_graph()
+    #solver.solve_from_file()
