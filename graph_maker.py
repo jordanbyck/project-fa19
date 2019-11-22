@@ -4,7 +4,7 @@ import numpy as np
 import random
 import sys
 import input_validator
-# import solver
+import solver
 import input_validator
 
 def make_graph(locations, homes):
@@ -93,4 +93,4 @@ def print_input(locations, homes, adj_list):
 if __name__ == "__main__":
     make_graph(locations=50, homes=25)
     input_validator.validate_input(input_file="50.in")
-    #solver.solve_from_file()
+    solver.solve_from_file("50.in", "50.out")
