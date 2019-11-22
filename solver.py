@@ -78,7 +78,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
             return
 
         openSet.remove(current)
-        neighbors = findNeighbor(current)
+        neighbors = findNeighbors(current)
 
         # loop through all neighbors
         for neighbor in neighbors:
@@ -101,6 +101,12 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
 
 def heuristicVal(node):
     return "yeeeeeee bro this is it"
+
+def findNeighbors(node):
+    return
+
+def dist(node1, node2):
+    return
 
 
 """
