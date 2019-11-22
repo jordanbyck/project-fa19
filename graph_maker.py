@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import sys
+import input_validator
 # import solver
 
 def make_graph(locations, homes):
@@ -65,7 +66,28 @@ def print_input(locations, homes, adj_list):
     for row in adj_list:
         print(separator.join(row))
 
+    # create a file
+    file = open(str(len(locations)) + ".in", "w+")
+
+    # write the number of locations
+    file.write(str(len(locations)) + newline)
+
+    # write the number of homes
+    file.write(str(len(homes)) + newline)
+
+    # write the locations
+    file.write(separator.join(str(location) for location in locations) + newline)
+
+    # write the homes
+    file.write(separator.join(str(home) for home in homes) + newline)
+
+    # write the adj list
+    for row in adj_list:
+        file.write(separator.join(row) + newline)
+    file.close()
+
+    input_validator.validate_input(str(len(locations)) + ".in")
 
 if __name__ == "__main__":
-    make_graph(locations=25, homes=10)
+    make_graph(locations=50, homes=25)
     #solver.solve_from_file()
