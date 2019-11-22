@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import sys
-import solver
+# import solver
 
-def print_map(locations, homes):
+def make_graph(locations, homes):
     np.set_printoptions(threshold=sys.maxsize)
 
     #LOCATIONS
@@ -36,10 +36,8 @@ def print_map(locations, homes):
     plt.show()
 
     adj = nx.to_numpy_matrix(f)
-    #print(adj)
-    #print("done")
+
     adj_list = adj.tolist()
-    #print(adj_list)
 
     for i in range(0,l):
         for j in range(0,l):
@@ -66,5 +64,14 @@ def print_input(locations, homes, adj_list):
     for row in adj_list:
         print(separator.join(row))
 
+def print_input_file(numLocations, numHomes, locationNames, homeNames, adjList):
+    file = open("50.in", "w+")
+    file.write(numLocations)
+    file.write(numHomes)
+    file.write(locationNames)
+    file.write(homeNames)
+
+
 if __name__ == "__main__":
-    print_map(locations=50, homes=25)
+    make_graph(locations=100, homes=50)
+    #solver.solve_from_file()
