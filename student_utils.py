@@ -41,27 +41,9 @@ def adjacency_matrix_to_graph(adjacency_matrix):
 
     return G, message
 
+#Adds 50 nodes to the graph G, with one node in the middle where all the other nodes are coming from
 
-def graph_to_adjacency_matrix(G):
-    holdmatrix = ["x" for _ in range(G.number_of_nodes())]
-    adjacency_matrix = [holdmatrix for _ in range(G.number_of_nodes())]
-    rownum = 0
-    print(adjacency_matrix)
-    for _ in G.nodes:
-        print("")
-        print(_)
-        colnum = 0
-        for x in G.nodes:
-            print(x)
-            if G.has_edge(_, x):
-                print("hello")
-                adjacency_matrix[x][_] = 1
-            colnum = colnum + 1
-        rownum = rownum + 1
-    return adjacency_matrix
-
-def fiftygraph(a):
-    G = nx.Graph()
+def fiftygraphmaker(G, a):
     G.add_nodes_from(range(a, 50 + a))
     for _ in range(6):
         G.add_edge((_ * 7) + 1 + a, (_ * 7) + 2 + a)
@@ -77,6 +59,35 @@ def fiftygraph(a):
     G.add_edge(a, 29 + a)
     G.add_edge(a, 36 + a)
     G.add_edge(a, 43 + a)
+    return G
+
+#Generates a graph with 50 nodes, using 50graphmaker
+
+def fiftygraph():
+    G = nx.Graph()
+    G = fiftygraphmaker(G, 0)
+    return G
+
+#Same as fiftygraph, but graph be more bigger
+
+def hundredgraph():
+    G = nx.Graph()
+    G = fiftygraphmaker(G, 0)
+    G = fiftygraphmaker(G, 50)
+    G.add_edge(0, 50)
+    return G
+
+#CHONK
+
+def twohundredgraph():
+    G = nx.Graph()
+    G = fiftygraphmaker(G, 0)
+    G = fiftygraphmaker(G, 50)
+    G = fiftygraphmaker(G, 100)
+    G = fiftygraphmaker(G, 150)
+    G.add_edge(0, 50)
+    G.add_edge(50, 100)
+    G.add_edge(100, 150)
     return G
 
 def is_metric(G):
