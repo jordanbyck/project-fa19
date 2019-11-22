@@ -12,6 +12,21 @@ from student_utils import *
 ======================================================================
 """
 
+class Node:
+
+    def __init__(self, name, position, parent):
+        self.name = name
+        self.position = position
+        self.parent = parent
+
+    def isGoal(self):
+        return
+
+    def findNeighbors(self):
+        return
+
+
+
 def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     """
     Write your algorithm here.
@@ -25,7 +40,71 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
-    pass
+    print("locations", list_of_locations)
+    print("homes", list_of_homes)
+    print("start", starting_car_location)
+    print("adj matrix", adjacency_matrix)
+    print("params", params)
+
+    # lets try some Astar wooooooo
+
+    # initially only add the start to the set of discovered nodes
+    openSet = {starting_car_location}
+
+    # maps a node to the node that came before it in the path
+    path = {}
+
+    # for a node, this is the cost of the cheapest path to that node
+    bestPathToNode = {}
+
+    # this is the heuristics for each node. f = g + h
+    heuristics = {}
+
+    # initialize all to infinity
+    for i in list_of_locations:
+        bestPathToNode[i] = float("inf")
+        heuristics[i] = float("inf")
+
+    # set start to 0
+    bestPathToNode[starting_car_location] = 0
+    heuristics[starting_car_location] = 0
+
+    while len(openSet) > 0:
+
+        # current is the node with the lowest heuristic value
+        current = float("inf")
+        for heuristic in heuristics:
+            current = min(current, heuristic)
+
+        # if we're at the goal, do some stuff
+        if isGoal():
+            return
+
+        openSet.remove(current)
+        neighbors = findNeighbor(current)
+
+        # loop through all neighbors
+        for neighbor in neighbors:
+
+            # dist(current, neighbor) is the weight of the edge from current to neighbor
+            # possibleBestDist could be better than our known best distance in bestPathToNode
+            possibleBestDist = bestPathToNode[current] + dist(current, neighbor)
+
+            if possibleBestDist < bestPathToNode[current]:
+                # it is better so change the stuff
+                path[neighbor] = current
+                bestPathToNode[neighbor] = possibleBestDist
+                heuristics[neighbor] = bestPathToNode[neighbor] + heuristicVal(neighbor)
+
+                if neighbor not in openSet:
+                    openSet.add(neighbor)
+
+    # failed
+    return "doodoopoopoo"
+
+def heuristicVal(node):
+    return "yeeeeeee bro this is it"
+
 
 """
 ======================================================================
