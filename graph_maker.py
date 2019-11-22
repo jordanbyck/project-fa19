@@ -44,7 +44,7 @@ def make_graph(locations, homes):
             if adj_list[i][j] == 0:
                 adj_list[i][j] = 'x'
             else:
-                adj_list[i][j]= '1'
+                adj_list[i][j] = '1'
 
     print_input(locations, homes, adj_list)
 
@@ -61,17 +61,19 @@ def print_input(locations, homes, adj_list):
     print(np.random.choice(locations))
     # adjacency list
     separator = " "
+    newline = "\n"
     for row in adj_list:
         print(separator.join(row))
 
-def print_input_file(numLocations, numHomes, locationNames, homeNames, adjList):
-    file = open("50.in", "w+")
-    file.write(numLocations)
-    file.write(numHomes)
-    file.write(locationNames)
-    file.write(homeNames)
-
+    file = open(str(len(locations)) + ".in", "w+")
+    file.write(str(len(locations)) + newline)
+    file.write(str(len(homes)) + newline)
+    file.write(separator.join(str(location) for location in locations) + newline)
+    file.write(separator.join(str(home) for home in homes) + newline)
+    for row in adj_list:
+        file.write(separator.join(row) + newline)
+    file.close()
 
 if __name__ == "__main__":
-    make_graph(locations=100, homes=50)
+    make_graph(locations=25, homes=10)
     #solver.solve_from_file()
