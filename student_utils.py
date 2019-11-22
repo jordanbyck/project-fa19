@@ -41,6 +41,21 @@ def adjacency_matrix_to_graph(adjacency_matrix):
     return G, message
 
 
+def graph_to_adjacency_matrix(G):
+    adjacency_matrix = [G.nodes.length()][G.nodes.length()]
+    rownum = 0
+    colnum = 0
+    for _ in G.nodes:
+        rownum = rownum + 1
+        colnum = 0
+        for x in G.nodes:
+            colnum = colnum + 1
+            if G.has_edge(_, x):
+                adjacency_matrix[rownum][colnum] = 1
+            else:
+                adjacency_matrix[rownum][colnum] = x
+    return adjacency_matrix
+
 def is_metric(G):
     shortest = dict(nx.floyd_warshall(G))
     for u, v, datadict in G.edges(data=True):
