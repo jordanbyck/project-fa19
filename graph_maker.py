@@ -58,7 +58,7 @@ def make_graph():
     #print('\n'.join([' '.join(['{:1}'.format(item) for item in row])
     #for row in adj_list]))
 
-def print_input_file(numLocations, numHomes, locationNames, homeNames, adjList):
+def print_input_file(numLocations, numHomes, locationNames, homeNames, startingLocation, adjList):
     file = open("50.in", "w+")
     file.write(numLocations)
     file.write(numHomes)
