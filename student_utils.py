@@ -90,6 +90,19 @@ def twohundredgraph():
     G.add_edge(100, 150)
     return G
 
+#prints the graph in the correct format for the
+
+def graph_printer(G):
+    matrix = nx.adjacency_matrix(G).toarray()
+    #print(matrix)
+    printlist = ""
+    for _ in range(len(matrix)):
+        for x in range(len(matrix)):
+            printlist += matrix[_][x]
+        print(printlist)
+        printlist = ""
+    return
+
 def is_metric(G):
     shortest = dict(nx.floyd_warshall(G))
     for u, v, datadict in G.edges(data=True):
