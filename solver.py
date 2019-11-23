@@ -123,23 +123,22 @@ def trivial_output_solver(list_of_locations, list_of_homes, starting_car_locatio
     for i in list_of_homes:
         homes.append(int(i))
 
-    # first, find a node that is a neighbor of the start
-    dropOffIndex = None
-    for i in range(len(adjacency_matrix[0])):
-        if adjacency_matrix[0][i] == 1:
-            dropOffIndex = i
-
-    dropOffNode = list_of_locations[dropOffIndex]
+    # # first, find a node that is a neighbor of the start
+    # dropOffIndex = None
+    # for i in range(len(adjacency_matrix[0])):
+    #     if adjacency_matrix[0][i] == 1:
+    #         dropOffIndex = i
+    #
+    # dropOffNode = list_of_locations[dropOffIndex]
 
     graph_maker.print_trivial_output(len(list_of_locations), starting_car_location, list_of_homes)
 
-    print(dropOffNode)
     start = list_of_locations[int(starting_car_location)]
-    dropOffNode = list_of_locations[int(dropOffNode)]
+    # dropOffNode = list_of_locations[int(dropOffNode)]
 
     start = int(start)
-    dropOffNode = int(dropOffNode)
-    return [start, dropOffNode, start], {dropOffNode: homes}
+    # dropOffNode = int(dropOffNode)
+    return [start], {start: homes}
 
 """
 ======================================================================
