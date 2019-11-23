@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 import scipy as sp
+import matplotlib.pyplot as plt
 
 
 def decimal_digits_check(number):
@@ -61,7 +62,7 @@ def fiftygraphmaker(G, a):
     G.add_edge(a, 43 + a)
     return G
 
-#Generates a graph with 50 nodes, using 50graphmaker
+#Generates a graph with 50 nodes, using fiftygraphmaker
 
 def fiftygraph():
     G = nx.Graph()
