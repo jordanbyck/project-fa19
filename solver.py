@@ -4,6 +4,7 @@ sys.path.append('..')
 sys.path.append('../..')
 import argparse
 import utils
+import graph_maker
 
 from student_utils import *
 """
@@ -33,74 +34,75 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
-    print("locations", list_of_locations)
-    print("homes", list_of_homes)
-    print("start", starting_car_location)
-    print("adj matrix", adjacency_matrix)
-    print("params", params)
-
-    # lets try some Astar wooooooo
-
-    # the number of TAs. Used for the goal test
-    numTAs = len(list_of_homes)
-
-    # initially only add the start to the set of discovered nodes
-    openSet = {starting_car_location}
-
-    # maps a node to the node that came before it in the path
-    path = {}
-
-    # for a node, this is the cost of the cheapest path to that node
-    bestPathToNode = {}
-
-    # this is the heuristics for each node. f = g + h
-    heuristics = {}
-
-    # initialize all to infinity
-    for i in list_of_locations:
-        bestPathToNode[i] = float("inf")
-        heuristics[i] = float("inf")
-
-    # set start to 0
-    bestPathToNode[starting_car_location] = 0
-    heuristics[starting_car_location] = 0
-
-    while len(openSet) > 0:
-
-        # current is the node with the lowest heuristic value
-        currentLowest = float("inf")
-        current = None
-        for key in heuristics.keys():
-            if currentLowest > heuristics[key]:
-                currentLowest = min(currentLowest, heuristics[key])
-                current = key
-
-        # if we're at the goal, do some stuff
-        if numTAs <= 0:
-            # reconstruct the path
-            return
-
-        openSet.remove(current)
-        neighbors = findNeighbors(current)
-
-        # loop through all neighbors
-        for neighbor in neighbors:
-
-            # dist(current, neighbor) is the weight of the edge from current to neighbor
-            # possibleBestDist could be better than our known best distance in bestPathToNode
-            possibleBestDist = bestPathToNode[current] + dist(current, neighbor)
-
-            if possibleBestDist < bestPathToNode[current]:
-                # it is better so change the stuff
-                path[neighbor] = current
-                bestPathToNode[neighbor] = possibleBestDist
-                heuristics[neighbor] = bestPathToNode[neighbor] + heuristicVal(neighbor)
-
-                if neighbor not in openSet:
-                    openSet.add(neighbor)
-
-    # failed
-    return "doodoopoopoo"
+    # print("locations", list_of_locations)
+    # print("homes", list_of_homes)
+    # print("start", starting_car_location)
+    # print("adj matrix", adjacency_matrix)
+    # print("params", params)
+    #
+    # # lets try some Astar wooooooo
+    #
+    # # the number of TAs. Used for the goal test
+    # numTAs = len(list_of_homes)
+    #
+    # # initially only add the start to the set of discovered nodes
+    # openSet = {starting_car_location}
+    #
+    # # maps a node to the node that came before it in the path
+    # path = {}
+    #
+    # # for a node, this is the cost of the cheapest path to that node
+    # bestPathToNode = {}
+    #
+    # # this is the heuristics for each node. f = g + h
+    # heuristics = {}
+    #
+    # # initialize all to infinity
+    # for i in list_of_locations:
+    #     bestPathToNode[i] = float("inf")
+    #     heuristics[i] = float("inf")
+    #
+    # # set start to 0
+    # bestPathToNode[starting_car_location] = 0
+    # heuristics[starting_car_location] = 0
+    #
+    # while len(openSet) > 0:
+    #
+    #     # current is the node with the lowest heuristic value
+    #     currentLowest = float("inf")
+    #     current = None
+    #     for key in heuristics.keys():
+    #         if currentLowest > heuristics[key]:
+    #             currentLowest = min(currentLowest, heuristics[key])
+    #             current = key
+    #
+    #     # if we're at the goal, do some stuff
+    #     if numTAs <= 0:
+    #         # reconstruct the path
+    #         return
+    #
+    #     openSet.remove(current)
+    #     neighbors = findNeighbors(current)
+    #
+    #     # loop through all neighbors
+    #     for neighbor in neighbors:
+    #
+    #         # dist(current, neighbor) is the weight of the edge from current to neighbor
+    #         # possibleBestDist could be better than our known best distance in bestPathToNode
+    #         possibleBestDist = bestPathToNode[current] + dist(current, neighbor)
+    #
+    #         if possibleBestDist < bestPathToNode[current]:
+    #             # it is better so change the stuff
+    #             path[neighbor] = current
+    #             bestPathToNode[neighbor] = possibleBestDist
+    #             heuristics[neighbor] = bestPathToNode[neighbor] + heuristicVal(neighbor)
+    #
+    #             if neighbor not in openSet:
+    #                 openSet.add(neighbor)
+    #
+    # # failed
+    # return "doodoopoopoo"
+    return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
 def heuristicVal(node):
     return "yeeeeeee bro this is it"
@@ -111,6 +113,33 @@ def findNeighbors(node):
 def dist(node1, node2):
     return
 
+def trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+
+    locs = []
+    for i in list_of_locations:
+        locs.append(int(i))
+
+    homes = []
+    for i in list_of_homes:
+        homes.append(int(i))
+
+    # first, find a node that is a neighbor of the start
+    dropOffIndex = None
+    for i in range(len(adjacency_matrix[0])):
+        if adjacency_matrix[0][i] == 1:
+            dropOffIndex = i
+
+    dropOffNode = list_of_locations[dropOffIndex]
+
+    graph_maker.print_trivial_output(len(list_of_locations), starting_car_location, list_of_homes)
+
+    print(dropOffNode)
+    start = list_of_locations[int(starting_car_location)]
+    dropOffNode = list_of_locations[int(dropOffNode)]
+
+    start = int(start)
+    dropOffNode = int(dropOffNode)
+    return [start, dropOffNode, start], {dropOffNode: homes}
 
 """
 ======================================================================

@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import sys
-import input_validator
 import solver
 import input_validator
+import output_validator
 
 def make_graph(locations, homes):
     np.set_printoptions(threshold=sys.maxsize)
@@ -50,6 +50,17 @@ def make_graph(locations, homes):
 
     print_input(locations, homes, adj_list)
 
+def make_custom_graph(locations, homes):
+
+    # num locations
+    l = locations
+
+    # num homes
+    h = homes
+
+
+
+
 def print_input(locations, homes, adj_list):
     # number of locations
     print(len(locations))
@@ -90,7 +101,30 @@ def print_input(locations, homes, adj_list):
         file.write(separator.join(row) + newline)
     file.close()
 
+# this is going to move 1 node away from start, drop everyone off, then return to start
+def print_trivial_output(numLocations, startingLocation, taHomes):
+
+    # create the file
+    file = open(str(numLocations) + ".out", "w+")
+
+    separator = " "
+    newLine = "\n"
+
+    # write the path
+    file.write(str(startingLocation) + newLine)
+
+    # write the number of drop offs which is 1
+    file.write("1" + newLine)
+
+    # write the drop off location, followed by every TA's home
+    file.write(str(startingLocation))
+    for home in taHomes:
+        file.write(separator + str(home))
+
+    file.close()
+
 if __name__ == "__main__":
     make_graph(locations=50, homes=25)
     input_validator.validate_input(input_file="50.in")
-    solver.solve_from_file("50.in", "50.out")
+    solver.solve_from_file("50.in", "project-fa19")
+    output_validator.validate_output(input_file="50.in", output_file="50.out")
