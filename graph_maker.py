@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import sys
-import input_validator
 import solver
 import input_validator
+import student_utils
+import snowflake_graph_maker
 
-def make_graph(locations, homes):
+def make_random_graph(locations, homes):
     np.set_printoptions(threshold=sys.maxsize)
 
     #LOCATIONS
@@ -50,6 +51,7 @@ def make_graph(locations, homes):
 
     print_input(locations, homes, adj_list)
 
+# prints output and writes to a file "[number of locations].in"
 def print_input(locations, homes, adj_list):
     # number of locations
     print(len(locations))
@@ -91,6 +93,8 @@ def print_input(locations, homes, adj_list):
     file.close()
 
 if __name__ == "__main__":
-    make_graph(locations=50, homes=25)
-    input_validator.validate_input(input_file="50.in")
-    solver.solve_from_file("50.in", "50.out")
+    # make_random_graph(locations=50, homes=25)
+    # input_validator.validate_input(input_file="50.in")
+
+    # twentyfive_graph = snowflake_graph_maker.snowflake_maker(locations=25, homes=8, intermediates=2)
+    hundred_graph = snowflake_graph_maker.snowflake_maker(locations=100, homes=33, intermediates=2)

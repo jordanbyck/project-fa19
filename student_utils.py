@@ -1,5 +1,7 @@
 import networkx as nx
 import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
 
 
 def decimal_digits_check(number):
@@ -40,6 +42,54 @@ def adjacency_matrix_to_graph(adjacency_matrix):
 
     return G, message
 
+#Adds 50 nodes to the graph G, with one node in the middle where all the other nodes are coming from
+
+def fiftygraphmaker(G, a):
+    G.add_nodes_from(range(a, 50 + a))
+    for _ in range(6):
+        G.add_edge((_ * 7) + 1 + a, (_ * 7) + 2 + a)
+        G.add_edge((_ * 7) + 2 + a, (_ * 7) + 3 + a)
+        G.add_edge((_ * 7) + 3 + a, (_ * 7) + 4 + a)
+        G.add_edge((_ * 7) + 4 + a, (_ * 7) + 5 + a)
+        G.add_edge((_ * 7) + 5 + a, (_ * 7) + 6 + a)
+        G.add_edge((_ * 7) + 6 + a, (_ * 7) + 7 + a)
+    G.add_edge(a, 1 + a)
+    G.add_edge(a, 8 + a)
+    G.add_edge(a, 15 + a)
+    G.add_edge(a, 22 + a)
+    G.add_edge(a, 29 + a)
+    G.add_edge(a, 36 + a)
+    G.add_edge(a, 43 + a)
+    return G
+
+#Generates a graph with 50 nodes, using fiftygraphmaker
+
+def fiftygraph():
+    G = nx.Graph()
+    G = fiftygraphmaker(G, 0)
+    return G
+
+#Same as fiftygraph, but graph be more bigger
+
+def hundredgraph():
+    G = nx.Graph()
+    G = fiftygraphmaker(G, 0)
+    G = fiftygraphmaker(G, 50)
+    G.add_edge(0, 50)
+    return G
+
+#CHONK
+
+def twohundredgraph():
+    G = nx.Graph()
+    G = fiftygraphmaker(G, 0)
+    G = fiftygraphmaker(G, 50)
+    G = fiftygraphmaker(G, 100)
+    G = fiftygraphmaker(G, 150)
+    G.add_edge(0, 50)
+    G.add_edge(50, 100)
+    G.add_edge(100, 150)
+    return G
 
 def is_metric(G):
     shortest = dict(nx.floyd_warshall(G))
