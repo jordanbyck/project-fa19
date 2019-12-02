@@ -101,8 +101,9 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     #                 openSet.add(neighbor)
     #
     # # failed
-    # return "doodoopoopoo"
     return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+
+
 
 def heuristicVal(node):
     return "yeeeeeee bro this is it"
