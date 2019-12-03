@@ -10,8 +10,8 @@ import networkx as nx
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
-import dwave_networkx as dnx
-import dimod
+# import dwave_networkx as dnx
+# import dimod
 
 
 from student_utils import *
