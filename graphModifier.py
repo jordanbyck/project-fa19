@@ -18,16 +18,27 @@ def graphClusterer(list_of_locations, list_of_homes, starting_car_location, adja
 
     num_clusters = (len(list_of_locations) // 10) + 1
     list_of_locations = [int(i) for i in list_of_locations]
+    starting_car_location = int(starting_car_location)
+    list_of_homes = [int(i) for i in list_of_homes]
+
 
     # will return a list a clusters
-    clusters = findClusterCenters(graph, list_of_locations, num_clusters, adjacency_matrix)
+    clusters = findClusterCenters(graph, list_of_locations, num_clusters, adjacency_matrix, starting_car_location)
 
     return
 
-def findClusterCenters(graph, list_of_locations, num_clusters, adjacency_matrix):
+def findClusterCenters(graph, list_of_locations, num_clusters, adjacency_matrix, starting_car_location):
 
-    for i in graph.neighbors(0):
-        print(i)
+    # start by just adding the starting position mapped to its neighbors
+    clusters = {}
+
+    print(list(graph.neighbors(starting_car_location)))
+    clusters[starting_car_location] = list(graph.neighbors(starting_car_location))
+
+    cluster_coefficients = nx.clustering(graph, graph.nodes, "weight")
+    
+    print("c", cluster_coefficients)
+
 
 
     return
