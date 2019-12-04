@@ -104,7 +104,6 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     #
     # # failed
 
-
     homes = []
     for i in list_of_homes:
         homes.append(int(i))
@@ -113,9 +112,15 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
 
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
+
     graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     practiceSolver.tspRepeats(adjacency_matrix)
     return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+
+    # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    # practiceSolver.tspRepeats(adjacency_matrix)
+    # return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+
 
 
 
