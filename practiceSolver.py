@@ -24,16 +24,11 @@ if __name__ == "__main__":
 
 
 def tspRepeats(matrix, start):
-
-    """G = nx.Graph()
-    edges = {(0, 1, 1), (1, 2, 1), (2, 3, 1)}
-    G.add_weighted_edges_from(edges)"""
+    #make a graph out of the matrix
     G = student_utils.adjacency_matrix_to_graph(matrix)[0]
-
-
-    #predecessors = nx.floyd_warshall_predecessor_and_distance(G)
     all_distances = dict(nx.floyd_warshall(G))
 
+    #initialize graph of distances (complete graph with shortest paths as edges)
     B = nx.Graph()
     edges = {""}
     edges.pop()
@@ -41,13 +36,15 @@ def tspRepeats(matrix, start):
         for __ in G.nodes:
             if not (_, __, all_distances[_][__]) in edges and not (__, _, all_distances[_][__]) in edges and not __ == _:
                 edges.add((_, __, all_distances[_][__]))
-
     B.add_weighted_edges_from(edges)
     #predecessors = nx.floyd_warshall_predecessor_and_distance(B)
 
     all_distances = dict(nx.floyd_warshall(B))
+
+    #creates returner, a two-opt algorithm version of TSP on the shortest paths graph
     returner = two_opt(B)
 
+    #shifts the array so the starting node is at the beginning of the array
     def shift(seq, n):
         n = n % len(seq)
         return seq[n:] + seq[:n]
@@ -55,16 +52,9 @@ def tspRepeats(matrix, start):
         if returner[_] == start:
             returner = shift(returner, _)
 
-    #returner = shift(returner, 21)
-    #print(returner)
-
-    """path = []
-    returnlen = len(returner)
-    for _ in range(returnlen):"""
-
-
     return returner
 
+#copied from internet
 def two_opt(graph, weight='weight'):
   num_nodes = graph.number_of_nodes()
   tour = list(graph.nodes())
