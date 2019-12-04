@@ -20,10 +20,10 @@ import student_utils
 from student_utils import *
 
 if __name__ == "__main__":
-
     solver.solve_from_file("inputs/10_50.in", "outputs")
 
-def tspRepeats(matrix):
+
+def tspRepeats(matrix, start):
 
     """G = nx.Graph()
     edges = {(0, 1, 1), (1, 2, 1), (2, 3, 1)}
@@ -44,10 +44,24 @@ def tspRepeats(matrix):
 
     B.add_weighted_edges_from(edges)
     #predecessors = nx.floyd_warshall_predecessor_and_distance(B)
+
     all_distances = dict(nx.floyd_warshall(B))
-    #return dnx.traveling_salesperson(B, dimod.ExactPolySolver(), start=1)
     returner = two_opt(B)
-    print(returner)
+
+    def shift(seq, n):
+        n = n % len(seq)
+        return seq[n:] + seq[:n]
+    for _ in range(len(returner)):
+        if returner[_] == start:
+            returner = shift(returner, _)
+
+    #returner = shift(returner, 21)
+    #print(returner)
+
+    """path = []
+    returnlen = len(returner)
+    for _ in range(returnlen):"""
+
 
     return returner
 

@@ -36,7 +36,7 @@ def findClusterCenters(graph, list_of_locations, num_clusters, adjacency_matrix,
     clusters[starting_car_location] = list(graph.neighbors(starting_car_location))
 
     cluster_coefficients = nx.clustering(graph, graph.nodes, "weight")
-    
+
     print("c", cluster_coefficients)
 
 
