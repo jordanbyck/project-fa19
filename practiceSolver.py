@@ -22,7 +22,10 @@ from student_utils import *
 if __name__ == "__main__":
     solver.solve_from_file("inputs/10_50.in", "outputs")
 
-
+def naiveSolve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)
+    print(G)
+    return 0
 def tspRepeats(matrix, start):
     #make a graph out of the matrix
     G = student_utils.adjacency_matrix_to_graph(matrix)[0]
