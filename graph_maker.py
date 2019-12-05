@@ -12,30 +12,35 @@ import snowflake_graph_maker
 def make_random_graph(locations, homes):
     np.set_printoptions(threshold=sys.maxsize)
 
-    #LOCATIONS
     l = locations
-
-    #HOMES
     h = homes
 
-    #Names of Locations
-
+    # names of Locations
     locations = list()
     for i in range(1,l+1):
         locations.append(i)
 
-    #Names of Homes
+    # names of Homes
     homes = random.sample(range(1,l),h)
 
-    #first input param needs to be l, second is up to us
+    # starting Location
+    start = np.random.choice(locations)
+
+    # first input param needs to be l, second is up to us
     #f = nx.dense_gnm_random_graph(l,100)
     f = nx.connected_watts_strogatz_graph(l,10,1)
 
+    # graph coloring: red for homes, blue for other locations, green for start
+    color_map = ['blue' for _ in locations]
+    for h in homes:
+        color_map[int(h)] = 'red'
+    color_map[int(start)] = 'green'
+    
     for i in f.edges():
         f[i[0]][i[1]]['weight'] = np.random.randint(100,199)
 
     labels = nx.get_edge_attributes(f, 'weight')
-    nx.draw(f, with_labels=True, font_weight='bold')
+    nx.draw(f, node_color=color_map, with_labels=True, font_weight='bold')
     nx.draw_networkx_edge_labels(f, pos=nx.spring_layout(f), edge_labels=labels)
     plt.show()
 
@@ -50,7 +55,7 @@ def make_random_graph(locations, homes):
             else:
                 adj_list[i][j] = '1'
 
-    print_input(locations, homes, adj_list)
+    print_input(locations, homes, start, adj_list)
 
 def make_custom_graph(locations, homes):
 
@@ -64,7 +69,7 @@ def make_custom_graph(locations, homes):
 
 
 # prints output and writes to a file "[number of locations].in"
-def print_input(locations, homes, adj_list):
+def print_input(locations, homes, start, adj_list):
     # number of locations
     print(len(locations))
     # number of homes
@@ -74,7 +79,7 @@ def print_input(locations, homes, adj_list):
     # homes
     print(homes)
     # starting location
-    print(np.random.choice(locations))
+    print(start)
     # adjacency list
     separator = " "
     newline = "\n"
@@ -97,7 +102,7 @@ def print_input(locations, homes, adj_list):
     file.write(separator.join(str(home) for home in homes) + newline)
 
     # write starting location
-    file.write(str(np.random.choice(locations)) + newline)
+    file.write(str(start) + newline)
 
     # write the adj list
     for row in adj_list:
@@ -130,7 +135,7 @@ if __name__ == "__main__":
     make_random_graph(locations=50, homes=25)
     input_validator.validate_input(input_file="50.in")
     solver.solve_from_file("50.in", "project-fa19")
-    output_validator.validate_output(input_file="50.in", output_file="50.out")
+    # output_validator.validate_output(input_file="50.in", output_file="50.out")
 
     # make_random_graph(locations=50, homes=25)
     # input_validator.validate_input(input_file="50.in")
