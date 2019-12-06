@@ -48,7 +48,10 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     #preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
     B = clusterGraph(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+
     returner = practiceSolver.tspRepeats(B, starting_car_location)
+
+
     finalList = [returner[0]]
     for i in range(len(returner)-1):
         finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
@@ -72,7 +75,8 @@ def clusterGraph(list_of_locations, list_of_homes, starting_car_location, adjace
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
     B = nx.Graph()
     clusterDict = clustering_approach.find_community_mappings(list_of_homes, adjacency_matrix)
-    dropoffs = clustering_approach.find_dropoff_locations(list_of_homes, adjacency_matrix, clusterDict)
+    dropoffs = clustering_approach.find_dropoff_locations(list_of_homes, adjacency_matrix, starting_car_location,
+                                                          clusterDict)
     all_distances = dict(nx.floyd_warshall(G))
     edges = {""}
     edges.pop()
