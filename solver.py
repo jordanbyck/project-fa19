@@ -148,11 +148,30 @@ def trivial_output_solver(list_of_locations, list_of_homes, starting_car_locatio
     randomized_homes = np.random.shuffle(list_of_homes)
     homes = list_of_homes
 
-    # clustering for G:
+    # using approximated average clustering for G:
     clustering_coeffs = nx.clustering(G)
     print("approximated average clustering coefficient:", clustering_coeffs)
     home_coeffs = {int(h): clustering_coeffs[int(h)] for h in homes}
     print("home clustering coeffs:", home_coeffs)
+
+    # using the Girvan–Newman method to find communities of graphs
+    # define custom function for how to select edges to remove in the algorithm
+    def most_central_edge(G):
+        centrality = nx.edge_betweenness_centrality(G, normalized=False, weight='weight')
+        max_cent = max(centrality.values())
+        # Scale the centrality values so they are between 0 and 1,
+        # and add some random noise.
+        centrality = {e: c / max_cent for e, c in centrality.items()}
+        # Add some random noise.
+        centrality = {e: c + np.random.random() for e, c in centrality.items()}
+        return max(centrality, key=centrality.get)
+
+    # get only the first k tuples of communities
+    k = 10
+
+    comp = algos.community.centrality.girvan_newman(G, most_valuable_edge=most_central_edge)
+    for communities in itertools.islice(comp, k):
+        print("communities: ", tuple(sorted(c) for c in communities))
 
     # using A* from start to each node
     total_path = []

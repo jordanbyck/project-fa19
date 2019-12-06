@@ -39,7 +39,6 @@ def main():
 
     G = nx.read_graphml(args[0] + ".graphml")
 
-
     (cost, T, L, path) = apprAlgorithm(G)
 
     print("The cost of this tour:", cost)
