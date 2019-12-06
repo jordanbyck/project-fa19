@@ -5,6 +5,7 @@ import random
 import sys
 import solver
 import student_utils
+from networkx.algorithms import community
 
 def graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix):
 
@@ -23,6 +24,7 @@ def graphClusterer(list_of_locations, list_of_homes, starting_car_location, adja
 
 
     # will return a list a clusters
+    print("homes", list_of_homes)
     clusters = findClusterCenters(graph, list_of_locations, num_clusters, adjacency_matrix, starting_car_location)
 
     return
@@ -35,11 +37,33 @@ def findClusterCenters(graph, list_of_locations, num_clusters, adjacency_matrix,
     print(list(graph.neighbors(starting_car_location)))
     clusters[starting_car_location] = list(graph.neighbors(starting_car_location))
 
-    cluster_coefficients = nx.clustering(graph, graph.nodes, "weight")
+    all_max_cliques = nx.find_cliques(graph)
+    all_cliques = nx.enumerate_all_cliques(graph)
 
-    print("c", cluster_coefficients)
+    print("====")
 
+    for cliq in all_max_cliques:
+        print(cliq)
 
+    print("===")
+
+    # for cliq in all_cliques:
+    #     print(cliq)
+
+    # maps nodes to a list which is their clique
+    seen_nodes = {}
+
+    for cliq in all_cliques:
+        cliq_len = len(cliq)
+
+        for node in cliq:
+            if node in set(seen_nodes.keys()):
+                if len(seen_nodes[node]) < cliq_len:
+                    seen_nodes[node] = cliq
+            else:
+                seen_nodes[node] = cliq
+
+    print(seen_nodes)
 
     return
 
