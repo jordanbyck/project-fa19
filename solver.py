@@ -41,15 +41,25 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     #Do not delete next line
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     location_dict = {}
+    car_start_int = 0
+    list_of_homes_int = []
+    list_of_locations_int = [_ for _ in range(len(list_of_locations))]
     for j in range(len(list_of_locations)):
         location_dict[j] = list_of_locations[j]
+        if list_of_locations[j] == starting_car_location:
+            car_start_int = j
+        for _ in list_of_homes:
+            if _ == list_of_locations[j]:
+                list_of_homes_int += [j]
+
+
 
 
     #preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
-    B = clusterGraph(list_of_locations, list_of_homes, starting_car_location, G)
+    B = clusterGraph(list_of_locations_int, list_of_homes_int, car_start_int, G)
 
-    returner = practiceSolver.tspRepeats(B, starting_car_location)
+    returner = practiceSolver.tspRepeats(B, car_start_int)
 
     finalList = [returner[0]]
     for i in range(len(returner)-1):
@@ -59,16 +69,16 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     #clustering_approach.visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     returnList = []
     for i in finalList:
-        returnList += location_dict[i]
+        returnList.append(location_dict[i])
 
-    return returnList, {int(starting_car_location): [int(i) for i in list_of_homes]}
+    return [int(_) for _ in finalList], {car_start_int: list_of_homes_int}
 
 
-def clusterGraph(list_of_locations, list_of_homes, starting_car_location, G):
+def clusterGraph(list_of_locations_int, list_of_homes_int, car_start_int, G):
     #G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
     B = nx.Graph()
-    clusterDict = clustering_approach.find_community_mappings(list_of_homes, G)
-    dropoffs = clustering_approach.find_dropoff_locations(list_of_homes, G, starting_car_location,
+    clusterDict = clustering_approach.find_community_mappings(list_of_homes_int, G)
+    dropoffs = clustering_approach.find_dropoff_locations(list_of_homes_int, G, car_start_int,
                                                           clusterDict)
     all_distances = dict(nx.floyd_warshall(G))
     edges = {""}

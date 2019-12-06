@@ -10,7 +10,7 @@ def find_community_mappings(list_of_homes, G):
 
     # using approximated average clustering for G (for verification)
     clustering_coeffs = nx.clustering(G)
-    home_coeffs = {int(h): clustering_coeffs[int(h)] for h in list_of_homes}
+    home_coeffs = {h: clustering_coeffs[h] for h in list_of_homes}
     print("home clustering coeffs:", home_coeffs)
 
     # approach using python-louvain (community)
