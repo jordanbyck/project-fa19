@@ -53,6 +53,12 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
 
     returner = practiceSolver.tspRepeats(B, starting_car_location)
 
+    #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    community_mapping = clustering_approach.find_community_mappings(list_of_homes, adjacency_matrix)
+    print(clustering_approach.find_optimal_dropoff_within_cluster(list_of_homes, adjacency_matrix, community_mapping))
+    # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    # return practiceSolver.tspRepeats(adjacency_matrix, 0), {int(starting_car_location): [int(i) for i in list_of_homes]}
+    #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
     finalList = [returner[0]]
     for i in range(len(returner)-1):

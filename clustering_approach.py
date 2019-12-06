@@ -1,6 +1,7 @@
 import student_utils
 from student_utils import *
 import community
+from networkx import dijkstra_path_length
 # using python-louvain: https://github.com/taynaud/python-louvain
 
 def find_community_mappings(list_of_homes, adjacency_matrix):
@@ -36,6 +37,66 @@ def find_dropoff_locations(list_of_homes, adjacency_matrix, start, community_map
         else:
             dropoffs[label] = current_location
     return dropoffs
+
+# modify to have multiple drop offs
+def find_optimal_dropoff_within_cluster(list_of_homes, adjacency_matrix, community_mappings):
+    # returns one optimal drop off within a cluster
+
+    graph = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
+
+    dropoffs = {}
+
+    print(community_mappings)
+    print(list_of_homes)
+    for label in community_mappings.keys():
+        curr_homes = []
+        curr_locations = community_mappings[label]
+        # find the homes within the current community
+        for node in curr_locations:
+            if str(node) in list_of_homes:
+                curr_homes.append(node)
+
+        neighbors = {}
+        curr_neighbors = []
+        # create a mapping between nodes and their neighbors
+        # nodes are mapped to a list of tuples that contains the neighboring node and the weight
+        for node in curr_locations:
+            for i in range(len(adjacency_matrix[node])):
+                if type(adjacency_matrix[node][i]) != str:
+                    curr_neighbors.append((i, adjacency_matrix[node][i]))
+
+            neighbors[node] = curr_neighbors
+
+        # find the costs of dropping off at each location
+        dropoff_costs = find_cost_of_dropoff_within_cluster(graph, curr_homes, curr_locations, neighbors)
+
+        # find the minimum cost dropoff
+        min_drop_cost = float("inf")
+        min_drop = None
+        for key in dropoff_costs.keys():
+            if dropoff_costs[key] < min_drop_cost:
+                min_drop_cost = dropoff_costs[key]
+                min_drop = key
+
+        dropoffs[label] = min_drop
+
+    return dropoffs
+
+def find_cost_of_dropoff_within_cluster(graph, homes, locations, neighbors):
+    # returns a mapping of dropoffs to costs
+    dropoff_costs = {}
+
+    for location in locations:
+        dropoff_costs[location] = 0
+        for home in homes:
+            dropoff_costs[location] += nx.dijkstra_path_length(graph, location, home)
+
+    print(dropoff_costs)
+    return dropoff_costs
+
+def visualize_communities_and_dropoffs():
+    # draw each community in a different color with its dropoff node
+    return
 
 def visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix):
     # draw each community in a different color with its dropoff node
