@@ -30,13 +30,13 @@ def find_dropoff_locations(list_of_homes, G, start, community_mappings):
         # picks a location from each community at random to start
 
         current_location = np.random.choice(community_mappings[label])
-        while current_location in list_of_homes:
-            current_location = np.random.choice(community_mappings[label])
-        if current_location == start:
+        """while current_location in list_of_homes:
+            current_location = np.random.choice(community_mappings[label])"""
+        if start in community_mappings[label]:
             dropoffs[label] = start
         else:
             dropoffs[label] = current_location
-    return dropoffs
+    return [dropoffs[label] for label in dropoffs.keys()]
 
 # modify to have multiple drop offs
 def find_optimal_dropoff_within_cluster(list_of_homes, adjacency_matrix, community_mappings):

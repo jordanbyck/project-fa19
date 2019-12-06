@@ -38,6 +38,9 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
+    if len(list_of_locations) == 0:
+        return [], {}
+
     #Do not delete next line
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     location_dict = {}
@@ -57,6 +60,8 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
     B = clusterGraph(list_of_locations_int, list_of_homes_int, car_start_int, G)
     returner = practiceSolver.tspRepeats(B, car_start_int)
+    if len(returner) == 0:
+        returner = [car_start_int]
 
     finalList = [returner[0]]
     for i in range(len(returner)-1):
@@ -83,6 +88,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     for i in finalList:
         returnList.append(location_dict[i])
 
+    print(cost_of_solution(G, [int(_) for _ in finalList], returnMapping)[0])
     return [int(_) for _ in finalList], returnMapping
 
 
@@ -93,13 +99,24 @@ def clusterGraph(list_of_locations_int, list_of_homes_int, car_start_int, G):
     dropoffs = clustering_approach.find_dropoff_locations(list_of_homes_int, G, car_start_int,
                                                           clusterDict)
     all_distances = dict(nx.floyd_warshall(G))
-    edges = {""}
-    edges.pop()
-    for _ in dropoffs:
-        for __ in dropoffs:
-            if not B.has_edge(_, __) and not __ == _:
-                edges.add((_, __, all_distances[_][__]))
-    B.add_weighted_edges_from(edges)
+    """    edges = {""}
+    edges.pop()"""
+    if len(dropoffs) == 0:
+        for _ in list_of_homes_int:
+            for __ in list_of_homes_int:
+                if not B.has_edge(_, __) and not __ == _:
+                    B.add_weighted_edges_from([(_, __, all_distances[_][__])])
+        i = 0
+        while car_start_int == list_of_homes_int[i]:
+            i += 1
+        B.add_weighted_edges_from([(car_start_int, list_of_homes_int[i], all_distances[car_start_int][list_of_homes_int[i]])])
+    else:
+        if car_start_int not in dropoffs:
+            dropoffs += [car_start_int]
+        for _ in dropoffs:
+            for __ in dropoffs:
+                if not B.has_edge(_, __) and not __ == _:
+                    B.add_weighted_edges_from([(_, __, all_distances[_][__])])
     return B
 
 

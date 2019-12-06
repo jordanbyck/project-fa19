@@ -20,7 +20,9 @@ import student_utils
 from student_utils import *
 
 if __name__ == "__main__":
-    solver.solve_from_file("test_inputs/test_10.in", "test_outputs")
+    solver.solve_all("inputs", "outputs")
+
+
 
 def naiveSolve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)
@@ -54,11 +56,12 @@ def tspRepeats(G, start):
     for _ in range(len(returner)):
         if returner[_] == int(start):
             returner = shift(returner, _)
-
-    finalList = [returner[0]]
-    for i in range(len(returner)-1):
-        finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
-    finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
+    finalList = []
+    if len(returner) > 0:
+        finalList = [returner[0]]
+        for i in range(len(returner)-1):
+            finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
+            finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
 
     return finalList
 
