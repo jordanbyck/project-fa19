@@ -6,6 +6,7 @@ import argparse
 import utils
 import graph_maker
 import student_utils
+import clustering_approach
 import graphModifier
 import practiceSolver
 
@@ -112,8 +113,8 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     # return [practiceSolver.tspRepeats(adjacency_matrix, 0)], {0: homes}
 
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-
-
+    community_mapping = clustering_approach.find_community_mappings(list_of_homes, adjacency_matrix)
+    print(clustering_approach.find_optimal_dropoff_within_cluster(list_of_homes, adjacency_matrix, community_mapping))
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     return practiceSolver.tspRepeats(adjacency_matrix, 0), {int(starting_car_location): [int(i) for i in list_of_homes]}
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)

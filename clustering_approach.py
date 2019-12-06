@@ -1,33 +1,95 @@
 import student_utils
 from student_utils import *
+import community
+from networkx import dijkstra_path_length
+# using python-louvain: https://github.com/taynaud/python-louvain
 
-def use_clustering(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+def find_community_mappings(list_of_homes, adjacency_matrix):
+    # returns a mapping from community label : nodes in that community
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
 
-    # using approximated average clustering for G:
+    # using approximated average clustering for G (for verification)
     clustering_coeffs = nx.clustering(G)
-    print("approximated average clustering coefficient:", clustering_coeffs)
     home_coeffs = {int(h): clustering_coeffs[int(h)] for h in list_of_homes}
     print("home clustering coeffs:", home_coeffs)
 
-    # using the Girvan–Newman method to find communities of graphs
-    # define custom function for how to select edges to remove in the algorithm
-    def most_central_edge(G):
-        centrality = nx.edge_betweenness_centrality(G)
-        max_cent = max(centrality.values())
-        # scale the centrality values so they are between 0 and 1, and add some random noise.
-        centrality = {e: c / max_cent for e, c in centrality.items()}
-        # add some random noise.
-        centrality = {e: c + np.random.random() for e, c in centrality.items()}
-        return max(centrality, key=centrality.get)
+    # approach using python-louvain (community)
+    partition = community.best_partition(G)
+    all_communities = set(partition.values())
+    community_mappings = {}
+    for comm_label in all_communities:
+        community_mappings[comm_label] = [node for node in partition.keys() if partition[node] == comm_label]
 
-    # get only the first k tuples of communities
-    k = int(len(list_of_locations) / 10)
-    communities = ()
-    comp = algos.community.centrality.girvan_newman(G, most_valuable_edge=most_central_edge)
-    for comms in itertools.islice(comp, k):
-        comms = tuple(sorted(c) for c in comms)
-        print("communities: ", comms)
+    print("python-louvain community mappings: ", community_mappings)
+    return community_mappings
 
+def find_dropoff_locations(list_of_homes, adjacency_matrix, community_mappings):
+    # returns a mapping from community label: dropoff location for that community
+    dropoffs = {}
+    for label in community_mappings.keys():
+        # picks a location from each community at random to start
+        current_location = np.random.choice(community_mappings[label])
+        while current_location in list_of_homes:
+            current_location = np.random.choice(community_mappings[label])
+        dropoffs[label] = current_location
+    return dropoffs
 
+# modify to have multiple drop offs
+def find_optimal_dropoff_within_cluster(list_of_homes, adjacency_matrix, community_mappings):
+    # returns one optimal drop off within a cluster
 
+    graph = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
+
+    dropoffs = {}
+
+    print(community_mappings)
+    print(list_of_homes)
+    for label in community_mappings.keys():
+        curr_homes = []
+        curr_locations = community_mappings[label]
+        # find the homes within the current community
+        for node in curr_locations:
+            if str(node) in list_of_homes:
+                curr_homes.append(node)
+
+        neighbors = {}
+        curr_neighbors = []
+        # create a mapping between nodes and their neighbors
+        # nodes are mapped to a list of tuples that contains the neighboring node and the weight
+        for node in curr_locations:
+            for i in range(len(adjacency_matrix[node])):
+                if type(adjacency_matrix[node][i]) != str:
+                    curr_neighbors.append((i, adjacency_matrix[node][i]))
+
+            neighbors[node] = curr_neighbors
+
+        # find the costs of dropping off at each location
+        dropoff_costs = find_cost_of_dropoff_within_cluster(graph, curr_homes, curr_locations, neighbors)
+
+        # find the minimum cost dropoff
+        min_drop_cost = float("inf")
+        min_drop = None
+        for key in dropoff_costs.keys():
+            if dropoff_costs[key] < min_drop_cost:
+                min_drop_cost = dropoff_costs[key]
+                min_drop = key
+
+        dropoffs[label] = min_drop
+
+    return dropoffs
+
+def find_cost_of_dropoff_within_cluster(graph, homes, locations, neighbors):
+    # returns a mapping of dropoffs to costs
+    dropoff_costs = {}
+
+    for location in locations:
+        dropoff_costs[location] = 0
+        for home in homes:
+            dropoff_costs[location] += nx.dijkstra_path_length(graph, location, home)
+
+    print(dropoff_costs)
+    return dropoff_costs
+
+def visualize_communities_and_dropoffs():
+    # draw each community in a different color with its dropoff node
+    return

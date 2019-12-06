@@ -133,13 +133,13 @@ def print_trivial_output(numLocations, startingLocation, taHomes):
 
 if __name__ == "__main__":
     make_random_graph(locations=50, homes=25)
-    input_validator.validate_input(input_file="50.in")
-    solver.solve_from_file("50.in", "project-fa19")
+    input_validator.validate_input(input_file="inputs/1_50.in")
+    solver.solve_from_file("inputs/1_50.in", "project-fa19")
     # output_validator.validate_output(input_file="50.in", output_file="50.out")
 
     # make_random_graph(locations=50, homes=25)
     # input_validator.validate_input(input_file="50.in")
 
     # twentyfive_graph = snowflake_graph_maker.snowflake_maker(locations=25, homes=8, intermediates=2)
-    hundred_graph = snowflake_graph_maker.snowflake_maker(locations=100, homes=33, intermediates=2)
+    # hundred_graph = snowflake_graph_maker.snowflake_maker(locations=100, homes=33, intermediates=2)
 
