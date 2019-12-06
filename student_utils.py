@@ -1,7 +1,9 @@
 import networkx as nx
+import networkx.algorithms as algos
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
+import itertools
 
 
 def decimal_digits_check(number):

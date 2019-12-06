@@ -35,7 +35,7 @@ def make_random_graph(locations, homes):
     for h in homes:
         color_map[int(h)] = 'red'
     color_map[int(start)] = 'green'
-    
+
     for i in f.edges():
         f[i[0]][i[1]]['weight'] = np.random.randint(100,199)
 
