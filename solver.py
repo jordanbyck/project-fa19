@@ -38,6 +38,8 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
+    #Do not delete next line
+    # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     home_dict = {}
     for i in list_of_homes:
         for j in range(len(list_of_locations)):
@@ -57,9 +59,9 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
     finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
 
-    clustering_approach.visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    #clustering_approach.visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
-    # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+
     return finalList, {int(starting_car_location): [int(i) for i in list_of_homes]}
 
 

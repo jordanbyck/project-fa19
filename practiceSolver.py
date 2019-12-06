@@ -52,7 +52,7 @@ def tspRepeats(G, start):
         n = n % len(seq)
         return seq[n:] + seq[:n]
     for _ in range(len(returner)):
-        if returner[_] == start:
+        if returner[_] == int(start):
             returner = shift(returner, _)
 
     finalList = [returner[0]]

@@ -13,7 +13,7 @@ def find_community_mappings(list_of_homes, adjacency_matrix):
     print("home clustering coeffs:", home_coeffs)
 
     # approach using python-louvain (community)
-    partition = community.best_partition(G, weight='weight')
+    partition = community.best_partition(G, weight='weightoo')
     all_communities = set(partition.values())
     community_mappings = {}
     for comm_label in all_communities:
