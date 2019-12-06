@@ -14,7 +14,7 @@ def find_community_mappings(list_of_homes, G):
     print("home clustering coeffs:", home_coeffs)
 
     # approach using python-louvain (community)
-    partition = community.best_partition(G, weight='weightoo')
+    partition = community.best_partition(G, weight='weight')
     all_communities = set(partition.values())
     community_mappings = {}
     for comm_label in all_communities:
@@ -22,6 +22,19 @@ def find_community_mappings(list_of_homes, G):
 
     print("python-louvain community mappings: ", community_mappings)
     return community_mappings
+def find_sub_communities(community_mappings, list_of_homes, G):
+    # partition each community into smaller communities for more optimal clusters
+    mappings = {}
+    for comm_label in community_mappings.keys():
+        print("finding sub-communities for label " + str(comm_label))
+        subgraph = G.subgraph(community_mappings[comm_label]).copy()
+        subgraph_partition = community.best_partition(subgraph, weight='weight')
+        subcommunities = set(subgraph_partition.values())
+        subcommunity_mappings = {}
+        for subcomm_label in subcommunities:
+            subcommunity_mappings[subcomm_label] = [node for node in subgraph_partition.keys() if subgraph_partition[node] == comm_label]
+        mappings[comm_label] = subcommunity_mappings
+    print("subcommunity mappings: ", mappings)
 
 def find_dropoff_locations(list_of_homes, G, start, community_mappings):
     # returns a mapping from community label: dropoff location for that community
@@ -93,10 +106,6 @@ def find_cost_of_dropoff_within_cluster(graph, homes, locations, neighbors):
 
     print(dropoff_costs)
     return dropoff_costs
-
-def visualize_communities_and_dropoffs():
-    # draw each community in a different color with its dropoff node
-    return
 
 def visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix):
     # draw each community in a different color with its dropoff node
