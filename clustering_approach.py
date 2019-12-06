@@ -1,5 +1,7 @@
 import student_utils
 from student_utils import *
+import community
+# using python-louvain: https://github.com/taynaud/python-louvain
 
 def use_clustering(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
@@ -29,5 +31,19 @@ def use_clustering(list_of_locations, list_of_homes, starting_car_location, adja
         comms = tuple(sorted(c) for c in comms)
         print("communities: ", comms)
 
+    # second approach using python-louvain (community)
+    partition = community.best_partition(G)
+    # drawing
+    size = float(len(set(partition.values())))
+    pos = nx.spring_layout(G)
+    count = 0.
+    for com in set(partition.values()):
+        count = count + 1.
+        list_nodes = [nodes for nodes in partition.keys()
+                      if partition[nodes] == com]
+        nx.draw_networkx_nodes(G, pos, list_nodes, node_size=20,
+                               node_color=str(count / size))
 
+    nx.draw_networkx_edges(G, pos, alpha=0.5)
+    plt.show()
 
