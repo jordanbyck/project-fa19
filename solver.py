@@ -5,6 +5,7 @@ sys.path.append('../..')
 import argparse
 import utils
 import graph_maker
+import student_utils
 import graphModifier
 import practiceSolver
 
@@ -104,17 +105,17 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     #
     # # failed
 
-    homes = []
-    for i in list_of_homes:
-        homes.append(int(i))
-    #print(practiceSolver.tspRepeats(adjacency_matrix, 0))
-    return [practiceSolver.tspRepeats(adjacency_matrix, 0)], {0: homes}
+    # homes = []
+    # for i in list_of_homes:
+    #     homes.append(int(i))
+    # print(practiceSolver.tspRepeats(adjacency_matrix, 0))
+    # return [practiceSolver.tspRepeats(adjacency_matrix, 0)], {0: homes}
 
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
 
-    graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-    practiceSolver.tspRepeats(adjacency_matrix)
+    # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    # practiceSolver.tspRepeats(adjacency_matrix)
     return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
@@ -131,17 +132,47 @@ def findNeighbors(node):
     return
 
 def dist(node1, node2):
-    return
+    # using networkx shortest_path function
+    return nx.shortest_path()
 
 def trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
 
-    locs = []
-    for i in list_of_locations:
-        locs.append(int(i))
+    # helper function with access to G
+    def distance_between_locations(a, b):
+        path_dist = nx.shortest_path_length(G, a, b)
+        # print("distance from " + str(a) + " to " + str(b) +  ": ", path_dist)
+        return path_dist
 
-    homes = []
-    for i in list_of_homes:
-        homes.append(int(i))
+    # either proceed linearly through list of homes or through shuffled list of homes
+    randomized_homes = np.random.shuffle(list_of_homes)
+    homes = list_of_homes
+
+    # clustering for G:
+    clustering_coeffs = nx.clustering(G)
+    print("approximated average clustering coefficient:", clustering_coeffs)
+    home_coeffs = {int(h): clustering_coeffs[int(h)] for h in homes}
+    print("home clustering coeffs:", home_coeffs)
+
+    # using A* from start to each node
+    total_path = []
+    current_home = homes[0]
+    total_path += nx.astar_path(G, int(starting_car_location), int(current_home), distance_between_locations)
+    for next_home in homes[1:]:
+        # print("finding path between " + str(current_home) + " and " + str(next_home))
+        path_between = nx.astar_path(G, int(starting_car_location), int(current_home), distance_between_locations)
+        total_path += path_between
+        current_home = next_home
+    total_path += nx.astar_path(G, int(current_home), int(starting_car_location), distance_between_locations)
+    print("total super shitty path: " + str(total_path))
+
+    # locs = []
+    # for i in list_of_locations:
+    #     locs.append(int(i))
+    #
+    # homes = []
+    # for i in list_of_homes:
+    #     homes.append(int(i))
 
     # # first, find a node that is a neighbor of the start
     # dropOffIndex = None
@@ -159,6 +190,21 @@ def trivial_output_solver(list_of_locations, list_of_homes, starting_car_locatio
     start = int(start)
     # dropOffNode = int(dropOffNode)
     return [start], {start: homes}
+
+def compute_clustering_coefficient(G, trials=1000):
+    n = len(G)
+    triangles = 0
+    nodes = G.nodes()
+    for i in [np.random.randint(0, n) for i in range(trials)]:
+        print([nodes[i]])
+        nbrs = list(G[nodes[i]])
+        if len(nbrs) < 2:
+            continue
+        u, v = np.random.choice(nbrs, 2)
+        if u in G[v]:
+            triangles += 1
+    return triangles / float(trials)
+
 
 """
 ======================================================================
