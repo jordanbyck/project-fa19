@@ -38,99 +38,70 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
-    # print("locations", list_of_locations)
-    # print("homes", list_of_homes)
-    # print("start", starting_car_location)
-    # print("adj matrix", adjacency_matrix)
-    # print("params", params)
-    #
-    # # lets try some Astar wooooooo
-    #
-    # # the number of TAs. Used for the goal test
-    # numTAs = len(list_of_homes)
-    #
-    # # initially only add the start to the set of discovered nodes
-    # openSet = {starting_car_location}
-    #
-    # # maps a node to the node that came before it in the path
-    # path = {}
-    #
-    # # for a node, this is the cost of the cheapest path to that node
-    # bestPathToNode = {}
-    #
-    # # this is the heuristics for each node. f = g + h
-    # heuristics = {}
-    #
-    # # initialize all to infinity
-    # for i in list_of_locations:
-    #     bestPathToNode[i] = float("inf")
-    #     heuristics[i] = float("inf")
-    #
-    # # set start to 0
-    # bestPathToNode[starting_car_location] = 0
-    # heuristics[starting_car_location] = 0
-    #
-    # while len(openSet) > 0:
-    #
-    #     # current is the node with the lowest heuristic value
-    #     currentLowest = float("inf")
-    #     current = None
-    #     for key in heuristics.keys():
-    #         if currentLowest > heuristics[key]:
-    #             currentLowest = min(currentLowest, heuristics[key])
-    #             current = key
-    #
-    #     # if we're at the goal, do some stuff
-    #     if numTAs <= 0:
-    #         # reconstruct the path
-    #         return
-    #
-    #     openSet.remove(current)
-    #     neighbors = findNeighbors(current)
-    #
-    #     # loop through all neighbors
-    #     for neighbor in neighbors:
-    #
-    #         # dist(current, neighbor) is the weight of the edge from current to neighbor
-    #         # possibleBestDist could be better than our known best distance in bestPathToNode
-    #         possibleBestDist = bestPathToNode[current] + dist(current, neighbor)
-    #
-    #         if possibleBestDist < bestPathToNode[current]:
-    #             # it is better so change the stuff
-    #             path[neighbor] = current
-    #             bestPathToNode[neighbor] = possibleBestDist
-    #             heuristics[neighbor] = bestPathToNode[neighbor] + heuristicVal(neighbor)
-    #
-    #             if neighbor not in openSet:
-    #                 openSet.add(neighbor)
-    #
-    # # failed
+    home_dict = {}
+    for i in list_of_homes:
+        for j in range(len(list_of_locations)):
+            if list_of_locations[j] == i:
+                home_dict[i] = j
+                continue
 
-    # homes = []
-    # for i in list_of_homes:
-    #     homes.append(int(i))
-    # print(practiceSolver.tspRepeats(adjacency_matrix, 0))
-    # return [practiceSolver.tspRepeats(adjacency_matrix, 0)], {0: homes}
+    #preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
+    B = clusterGraph(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+
+    returner = practiceSolver.tspRepeats(B, starting_car_location)
 
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     community_mapping = clustering_approach.find_community_mappings(list_of_homes, adjacency_matrix)
     print(clustering_approach.find_optimal_dropoff_within_cluster(list_of_homes, adjacency_matrix, community_mapping))
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-    return practiceSolver.tspRepeats(adjacency_matrix, 0), {int(starting_car_location): [int(i) for i in list_of_homes]}
+    # return practiceSolver.tspRepeats(adjacency_matrix, 0), {int(starting_car_location): [int(i) for i in list_of_homes]}
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
+    finalList = [returner[0]]
+    for i in range(len(returner)-1):
+        finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
+    finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
+
+    clustering_approach.visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-    # practiceSolver.tspRepeats(adjacency_matrix)
-    # return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    return finalList, {int(starting_car_location): [int(i) for i in list_of_homes]}
 
 
+def clusterGraph(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix):
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
+    B = nx.Graph()
+    clusterDict = clustering_approach.find_community_mappings(list_of_homes, adjacency_matrix)
+    dropoffs = clustering_approach.find_dropoff_locations(list_of_homes, adjacency_matrix, starting_car_location,
+                                                          clusterDict)
+    all_distances = dict(nx.floyd_warshall(G))
+    edges = {""}
+    edges.pop()
+    for _ in dropoffs:
+        for __ in dropoffs:
+            if not B.has_edge(_, __) and not __ == _:
+                edges.add((_, __, all_distances[_][__]))
+    B.add_weighted_edges_from(edges)
+    return B
 
 
-def heuristicVal(node):
-    return "yeeeeeee bro this is it"
-
-def findNeighbors(node):
+#not working!!!! fix this
+def preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)
+    home_dict = {}
+    for i in list_of_homes:
+        for j in range(len(list_of_locations)):
+            if list_of_locations[j] == i:
+                home_dict[i] = j
+                continue
+    for i in home_dict:
+        if G[0].degree[home_dict[i]] == 1:
+            home_dict[i] = G.edges[home_dict[i]][0]
+    print(1)
     return
+
+
 
 def dist(node1, node2):
     # using networkx shortest_path function
