@@ -53,12 +53,9 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
                 list_of_homes_int += [j]
 
 
-
-
     #preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
     B = clusterGraph(list_of_locations_int, list_of_homes_int, car_start_int, G)
-
     returner = practiceSolver.tspRepeats(B, car_start_int)
 
     finalList = [returner[0]]
@@ -66,12 +63,27 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
     finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
 
+    all_distances = dict(nx.floyd_warshall(G))
+    returnMapping = {}
+    for i in list_of_homes_int:
+        minDist = float('inf')
+        home_map = 999
+        for j in finalList:
+            if all_distances[i][j] < minDist:
+                minDist = all_distances[i][j]
+                home_map = j
+        if home_map != 999:
+            if not home_map in returnMapping:
+                returnMapping[home_map] = [i]
+            else:
+                returnMapping[home_map] = returnMapping[home_map] + [i]
+
     #clustering_approach.visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     returnList = []
     for i in finalList:
         returnList.append(location_dict[i])
 
-    return [int(_) for _ in finalList], {car_start_int: list_of_homes_int}
+    return [int(_) for _ in finalList], returnMapping
 
 
 def clusterGraph(list_of_locations_int, list_of_homes_int, car_start_int, G):
