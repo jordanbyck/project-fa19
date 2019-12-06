@@ -113,7 +113,6 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     # return [practiceSolver.tspRepeats(adjacency_matrix, 0)], {0: homes}
 
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-    clustering_approach.use_clustering(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     return practiceSolver.tspRepeats(adjacency_matrix, 0), {int(starting_car_location): [int(i) for i in list_of_homes]}
