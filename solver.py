@@ -38,18 +38,46 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
+    home_dict = {}
+    for i in list_of_homes:
+        for j in range(len(list_of_locations)):
+            if list_of_locations[j] == i:
+                home_dict[i] = j
+                continue
+
+    #preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
+    B = clusterGraph(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    returner = practiceSolver.tspRepeats(B, starting_car_location)
+    finalList = [returner[0]]
+    for i in range(len(returner)-1):
+        finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
+    finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
+
     clustering_approach.visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-    return practiceSolver.tspRepeats(adjacency_matrix, 0), {int(starting_car_location): [int(i) for i in list_of_homes]}
-    #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-    # practiceSolver.tspRepeats(adjacency_matrix)
-    # return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+    return finalList, {int(starting_car_location): [int(i) for i in list_of_homes]}
 
 
+def clusterGraph(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix):
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
+    B = nx.Graph()
+    clusterDict = clustering_approach.find_community_mappings(list_of_homes, adjacency_matrix)
+    dropoffs = clustering_approach.find_dropoff_locations(list_of_homes, adjacency_matrix, clusterDict)
+    all_distances = dict(nx.floyd_warshall(G))
+    edges = {""}
+    edges.pop()
+    for _ in dropoffs:
+        for __ in dropoffs:
+            if not B.has_edge(_, __) and not __ == _:
+                edges.add((_, __, all_distances[_][__]))
+    B.add_weighted_edges_from(edges)
+    return B
 
 
-"""def preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+#not working!!!! fix this
+def preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)
     home_dict = {}
     for i in list_of_homes:
@@ -61,11 +89,9 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         if G[0].degree[home_dict[i]] == 1:
             home_dict[i] = G.edges[home_dict[i]][0]
     print(1)
-    return"""
-
-
-def findNeighbors(node):
     return
+
+
 
 def dist(node1, node2):
     # using networkx shortest_path function

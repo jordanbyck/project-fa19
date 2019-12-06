@@ -27,9 +27,8 @@ def naiveSolve(list_of_locations, list_of_homes, starting_car_location, adjacenc
     print(G)
     return 0
 
-def tspRepeats(matrix, start):
+def tspRepeats(G, start):
     #make a graph out of the matrix
-    G = student_utils.adjacency_matrix_to_graph(matrix)[0]
     all_distances = dict(nx.floyd_warshall(G))
 
     #initialize graph of distances (complete graph with shortest paths as edges)
