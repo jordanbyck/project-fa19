@@ -56,12 +56,10 @@ def tspRepeats(matrix, start):
         if returner[_] == start:
             returner = shift(returner, _)
 
-    #add back in edges that didn't exist
-    #path = list(nx.all_pairs_shortest_path(G))
     finalList = [returner[0]]
     for i in range(len(returner)-1):
         finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
-    finalList += [returner[0]]
+    finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
 
     return finalList
 

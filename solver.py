@@ -38,11 +38,12 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
-    # print("locations", list_of_locations)
-    # print("homes", list_of_homes)
-    # print("start", starting_car_location)
-    # print("adj matrix", adjacency_matrix)
-    # print("params", params)
+    print("locations", list_of_locations)
+    print("homes", list_of_homes)
+    print("start", starting_car_location)
+    print("adj matrix", adjacency_matrix)
+    print("params", params)
+    #preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     #
     # # lets try some Astar wooooooo
     #
@@ -125,8 +126,20 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
 
 
 
-def heuristicVal(node):
-    return "yeeeeeee bro this is it"
+"""def preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)
+    home_dict = {}
+    for i in list_of_homes:
+        for j in range(len(list_of_locations)):
+            if list_of_locations[j] == i:
+                home_dict[i] = j
+                continue
+    for i in home_dict:
+        if G[0].degree[home_dict[i]] == 1:
+            home_dict[i] = G.edges[home_dict[i]][0]
+    print(1)
+    return"""
+
 
 def findNeighbors(node):
     return
