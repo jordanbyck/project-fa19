@@ -35,3 +35,4 @@ def find_dropoff_locations(list_of_homes, adjacency_matrix, community_mappings):
 
 def visualize_communities_and_dropoffs():
     # draw each community in a different color with its dropoff node
+    return
