@@ -20,34 +20,35 @@ import student_utils
 from student_utils import *
 
 if __name__ == "__main__":
-    solver.solve_from_file("inputs/10_50.in", "outputs")
+    solver.solve_from_file("test_inputs/test_10.in", "test_outputs")
 
+def naiveSolve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)
+    print(G)
+    return 0
 
 def tspRepeats(matrix, start):
-
-    """G = nx.Graph()
-    edges = {(0, 1, 1), (1, 2, 1), (2, 3, 1)}
-    G.add_weighted_edges_from(edges)"""
+    #make a graph out of the matrix
     G = student_utils.adjacency_matrix_to_graph(matrix)[0]
-
-
-    #predecessors = nx.floyd_warshall_predecessor_and_distance(G)
     all_distances = dict(nx.floyd_warshall(G))
 
-    B = nx.Graph()
+    #initialize graph of distances (complete graph with shortest paths as edges)
+    B = G.copy()
     edges = {""}
     edges.pop()
     for _ in G.nodes:
         for __ in G.nodes:
-            if not (_, __, all_distances[_][__]) in edges and not (__, _, all_distances[_][__]) in edges and not __ == _:
+            if not B.has_edge(_, __) and not __ == _:
                 edges.add((_, __, all_distances[_][__]))
-
     B.add_weighted_edges_from(edges)
     #predecessors = nx.floyd_warshall_predecessor_and_distance(B)
 
     all_distances = dict(nx.floyd_warshall(B))
+
+    #creates returner, a two-opt algorithm version of TSP on the shortest paths graph
     returner = two_opt(B)
 
+    #shifts the array so the starting node is at the beginning of the array
     def shift(seq, n):
         n = n % len(seq)
         return seq[n:] + seq[:n]
@@ -55,16 +56,16 @@ def tspRepeats(matrix, start):
         if returner[_] == start:
             returner = shift(returner, _)
 
-    #returner = shift(returner, 21)
-    #print(returner)
+    #add back in edges that didn't exist
+    #path = list(nx.all_pairs_shortest_path(G))
+    finalList = [returner[0]]
+    for i in range(len(returner)-1):
+        finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
+    finalList += [returner[0]]
 
-    """path = []
-    returnlen = len(returner)
-    for _ in range(returnlen):"""
+    return finalList
 
-
-    return returner
-
+#copied from internet
 def two_opt(graph, weight='weight'):
   num_nodes = graph.number_of_nodes()
   tour = list(graph.nodes())
