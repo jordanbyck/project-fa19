@@ -57,18 +57,10 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         finalList += nx.shortest_path(G, returner[i], returner[i+1], weight='weight')[1:]
     finalList += nx.shortest_path(G, returner[-1], returner[0], weight='weight')[1:]
 
-
-
-
-
+    clustering_approach.visualize_communities_and_dropoffs(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     return finalList, {int(starting_car_location): [int(i) for i in list_of_homes]}
-    #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-
-    # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
-    # practiceSolver.tspRepeats(adjacency_matrix)
-    # return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
 
 
 def clusterGraph(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix):
