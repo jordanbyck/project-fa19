@@ -107,7 +107,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     homes = []
     for i in list_of_homes:
         homes.append(int(i))
-    print(practiceSolver.tspRepeats(adjacency_matrix, 0))
+    #print(practiceSolver.tspRepeats(adjacency_matrix, 0))
     return [practiceSolver.tspRepeats(adjacency_matrix, 0)], {0: homes}
 
     #return trivial_output_solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)

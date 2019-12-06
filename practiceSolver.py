@@ -51,7 +51,6 @@ def tspRepeats(matrix, start):
     for _ in range(len(returner)):
         if returner[_] == start:
             returner = shift(returner, _)
-
     return returner
 
 #copied from internet
