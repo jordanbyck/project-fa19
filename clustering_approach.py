@@ -22,17 +22,25 @@ def find_community_mappings(list_of_homes, adjacency_matrix):
     print("python-louvain community mappings: ", community_mappings)
     return community_mappings
 
-def find_dropoff_locations(list_of_homes, adjacency_matrix, community_mappings):
+def find_dropoff_locations(list_of_homes, adjacency_matrix, start, community_mappings):
     # returns a mapping from community label: dropoff location for that community
     dropoffs = {}
     for label in community_mappings.keys():
         # picks a location from each community at random to start
+
         current_location = np.random.choice(community_mappings[label])
         while current_location in list_of_homes:
             current_location = np.random.choice(community_mappings[label])
-        dropoffs[label] = current_location
+        if current_location == start:
+            dropoffs[label] = start
+        else:
+            dropoffs[label] = current_location
     return dropoffs
 
-def visualize_communities_and_dropoffs():
+def visualize_communities_and_dropoffs(G, start):
     # draw each community in a different color with its dropoff node
+
     return
+
+
+
