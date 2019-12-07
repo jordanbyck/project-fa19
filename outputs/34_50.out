@@ -1,5 +1,6 @@
-stop0 stop1 stop2 stop1 stop0
-3
-stop0 stop0 stop3 stop5 stop7
+stop0 stop1 stop2 stop1 stop0 stop3 stop0
+4
+stop0 stop0 stop5 stop7
+stop3 stop3
 stop2 stop4
 stop1 stop8

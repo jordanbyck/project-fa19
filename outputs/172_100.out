@@ -1,5 +1,5 @@
-A B C D E F G F E D C B A B C D E F G H I J K J I H G F E D C B A B C D E F G H I J K L M N M L K J I H G F E D C B A B C D E F G H I J K L M N O P Q R Q P O N M L K J I H G F E D C B A B C D E F G H I J K L M N O P Q R S T U V W X Y X W V U T S R Q P O N M L K J I H G F E D C B A
-24
+A B C D E F G H I H G F E D C B A B C D E F G H I J K L M N O P Q R Q P O N M L K J I H G F E D C B A B C D E F G H I J K L M N O P Q R S T U V W X Y X W V U T S R Q P O N M L K J I H G F E D C B A B C D E F G H I J K L M N O P Q R S T U V W X Y Z AA AB AC AB AA Z Y X W V U T S R Q P O N M L K J I H G F E D C B A
+28
 B B
 C C
 D D
@@ -23,4 +23,8 @@ U U
 V V
 W W
 X X
-Y Y Z AA AB AC AD AE
+Y Y
+Z Z
+AA AA
+AB AB
+AC AC AD AE

@@ -1,3 +1,4 @@
-stop0 location1 stop0
-1
-stop0 stop0 stop1 stop3 stop4 stop10 stop6 stop5
+stop0 stop3 stop0
+2
+stop0 stop0 stop1 stop4 stop6 stop5
+stop3 stop3 stop10

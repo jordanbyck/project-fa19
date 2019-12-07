@@ -14,7 +14,7 @@ def find_community_mappings(list_of_homes, G):
     print("home clustering coeffs:", home_coeffs)
 
     # approach using python-louvain (community)
-    partition = community.best_partition(G, weight='weightoo')
+    partition = community.best_partition(G, weight='weight')
     all_communities = set(partition.values())
     community_mappings = {}
     for comm_label in all_communities:
@@ -26,16 +26,28 @@ def find_community_mappings(list_of_homes, G):
 def find_dropoff_locations(list_of_homes, G, start, community_mappings):
     # returns a mapping from community label: dropoff location for that community
     dropoffs = {}
+    all_distances = dict(nx.floyd_warshall(G))
     for label in community_mappings.keys():
         # picks a location from each community at random to start
 
-        current_location = np.random.choice(community_mappings[label])
+        #current_location = np.random.choice(community_mappings[label])
         """while current_location in list_of_homes:
             current_location = np.random.choice(community_mappings[label])"""
+        #finds the best dropoff location in the cluster and uses it as the center
+        min_distance = float("inf")
+        min_node = np.random.choice(community_mappings[label])
+        for i in community_mappings[label]:
+            this_node_score = 0
+            for j in community_mappings[label]:
+                this_node_score += all_distances[i][j]
+            if this_node_score < min_distance:
+                min_distance = this_node_score
+                min_node = i
+
         if start in community_mappings[label]:
             dropoffs[label] = start
         else:
-            dropoffs[label] = current_location
+            dropoffs[label] = min_node
     return [dropoffs[label] for label in dropoffs.keys()]
 
 # modify to have multiple drop offs
