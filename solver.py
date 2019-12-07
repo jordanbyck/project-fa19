@@ -38,6 +38,11 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
+
+    """list_of_locations, list_of_homes_int, starting_car_location, \
+    adjacency_matrix = preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)"""
+
+
     if len(list_of_locations) == 0:
         return [], {}
 
@@ -45,6 +50,8 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     # graphModifier.graphClusterer(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
     location_dict = {}
     car_start_int = 0
+
+
     list_of_homes_int = []
     list_of_locations_int = [_ for _ in range(len(list_of_locations))]
     for j in range(len(list_of_locations)):
@@ -121,19 +128,26 @@ def clusterGraph(list_of_locations_int, list_of_homes_int, car_start_int, G):
 
 
 #not working!!!! fix this
-def preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+def preProcess(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix):
+
     G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)
-    home_dict = {}
-    for i in list_of_homes:
-        for j in range(len(list_of_locations)):
-            if list_of_locations[j] == i:
-                home_dict[i] = j
-                continue
-    for i in home_dict:
-        if G[0].degree[home_dict[i]] == 1:
-            home_dict[i] = G.edges[home_dict[i]][0]
-    print(1)
-    return
+
+    location_dict = {}
+    list_of_homes_int = []
+    list_of_locations_int = [_ for _ in range(len(list_of_locations))]
+    for j in range(len(list_of_locations)):
+        location_dict[j] = list_of_locations[j]
+        if list_of_locations[j] == starting_car_location:
+            car_start_int = j
+        for _ in list_of_homes:
+            if _ == list_of_locations[j]:
+                list_of_homes_int += [j]
+
+    for i in list_of_homes_int:
+        if G[0].degree[i] == 1:
+            list_of_homes_int[i] = G.edges[i][0]
+
+    return list_of_locations, list_of_homes, starting_car_location, adjacency_matrix
 
 
 
@@ -273,12 +287,43 @@ def solve_from_file(input_file, output_directory, params=[]):
 
     convertToFile(car_path, drop_offs, output_file, list_locations)
 
+def solve_from_file_score(input_file, output_directory, params=[]):
+    print('Processing', input_file)
+
+    input_data = utils.read_file(input_file)
+    num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
+    car_path, drop_offs = solve(list_locations, list_houses, starting_car_location, adjacency_matrix, params=params)
+
+    basename, filename = os.path.split(input_file)
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
+    output_file = utils.input_to_output(input_file, output_directory)
+    G = student_utils.adjacency_matrix_to_graph(adjacency_matrix)[0]
+    #convertToFile(car_path, drop_offs, output_file, list_locations)
+    return G, car_path, drop_offs
+
 
 def solve_all(input_directory, output_directory, params=[]):
     input_files = utils.get_files_with_extension(input_directory, 'in')
 
     for input_file in input_files:
         solve_from_file(input_file, output_directory, params=params)
+
+def solve_some(input_directory, output_directory, params=[]):
+    input_files = utils.get_files_with_extension(input_directory, 'in')
+    num_so_far = 0
+    score = 0
+    for input_file in input_files:
+        num_so_far += 1
+        G, car_cycle, dropoff_mapping = solve_from_file_score(input_file, output_directory)
+        this_score = student_utils.cost_of_solution(G, car_cycle, dropoff_mapping)[0]
+        graph_total = sum(G[u][v]['weight'] for (u,v) in G.edges)
+        score += graph_total / this_score
+        if num_so_far == 10:
+            print("score:")
+            print(score)
+            break
+
 
 
 if __name__=="__main__":

@@ -20,7 +20,7 @@ import student_utils
 from student_utils import *
 
 if __name__ == "__main__":
-    solver.solve_all("inputs", "outputs")
+    solver.solve_some("inputs", "outputs")
 
 
 
